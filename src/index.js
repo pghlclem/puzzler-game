@@ -23,9 +23,10 @@ import styles from './index.css';
     }
   });
 
-
+  // Set global namespace
   global.GameBoard = GameBoard;
 
+  // Return all assets
   function importAll(require) {
     return require.keys().map(require);
   }
