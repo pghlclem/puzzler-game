@@ -10,6 +10,7 @@ const GameBoard = {
   pieceSize: 100,
   pieceGutter: 2,
   interactable: true,
+  success: false,
 
   init: function() {
     GameBoard.shuffleBtn = document.getElementById('shuffle-btn');
@@ -72,6 +73,7 @@ const GameBoard = {
 
   onSuccess: function() {
     GameBoard.interactable = false;
+    GameBoard.success = true;
     GameBoard.shuffleBtn.style.display = 'none';
     TweenMax.to(PieceManager.empty, 0.32, {opacity: 1, ease: Power2.easeInOut});
   },

@@ -7,7 +7,8 @@ const PieceManager = {
   pieces: [],
   colors: {
     active: 'rgb(105, 191, 180)',
-    inactive: 'rgb(190, 25, 25)'
+    inactive: 'rgb(190, 25, 25)',
+    success: 'rgb(25, 215, 25)'
   },
   empty: null,
 

@@ -22,11 +22,12 @@ function Piece(id, x, y) {
 Piece.prototype.update = function() {
   let status;
 
-  if (Helpers.getObjectsDistance(this, PieceManager.empty) <= this.size + GameBoard.pieceGutter) {
-    status = 'active';
-  } else {
-    status = 'inactive';
-  }
+  // Check if piece is movable or not
+  if (Helpers.getObjectsDistance(this, PieceManager.empty) <= this.size + GameBoard.pieceGutter) status = 'active';
+  else status = 'inactive';
+
+  // If game has finished successfully
+  if (GameBoard.success) status = 'success';
   
   this.color = PieceManager.colors[status];
 };
