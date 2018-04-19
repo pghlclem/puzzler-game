@@ -5,6 +5,10 @@ import _ from 'lodash';
 
 const PieceManager = {
   pieces: [],
+  colors: {
+    active: 'rgb(105, 191, 180)',
+    inactive: 'rgb(190, 25, 25)'
+  },
   empty: null,
 
   add: function(id, x, y) {
