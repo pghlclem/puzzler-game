@@ -1,14 +1,42 @@
 import Engine from './Engine';
+import Helpers from './Helpers';
+import PieceManager from './Pieces/PieceManager';
 
 const GameBoard = {
   mousePos: {x: null, y: null},
+  grid: [],
+  difficuly: 4,
+  pieceSize: 100,
+  pieceGutter: 2,
 
   init: function() {
     GameBoard.shuffleBtn = document.getElementById('shuffle-btn');
     GameBoard.canvas = document.getElementById('game-canvas');
     GameBoard.ctx = GameBoard.canvas.getContext('2d');
 
+    // Create grid
+    for (let i = 0; i < GameBoard.difficuly; i++) {
+      for (let j = 0; j < GameBoard.difficuly; j++) {
+        GameBoard.grid.push({
+          x: (GameBoard.pieceSize + GameBoard.pieceGutter) * j,
+          y: (GameBoard.pieceSize + GameBoard.pieceGutter) * i
+        });
+      }
+    }
+
+    // Create pieces
+    GameBoard.grid.forEach((grid, index) => {
+      let piece = PieceManager.add(index, grid.x, grid.y);
+      
+      // Set reference for empty piece and hide it
+      if (index === GameBoard.grid.length - 1) {
+        PieceManager.empty = piece;
+        piece.opacity = 0;
+      }
+    });
+
     // Run the engine
+    Engine.addToGameLoop(PieceManager);
     Engine.start();
 
     // Add mouse listeners
@@ -26,7 +54,7 @@ const GameBoard = {
   },
   
   onMouseMoveHandler: function(e) {
-    console.log('Move');
+    GameBoard.mousePos = Helpers.getMousePos(GameBoard.canvas, e);
   }
 }
 
