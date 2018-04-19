@@ -4,16 +4,18 @@ import PieceManager from './Pieces/PieceManager';
 
 const GameBoard = {
   mousePos: {x: null, y: null},
+  assets: [],
   grid: [],
   difficuly: 4,
   pieceSize: 100,
   pieceGutter: 2,
+  interactable: true,
 
   init: function() {
     GameBoard.shuffleBtn = document.getElementById('shuffle-btn');
     GameBoard.canvas = document.getElementById('game-canvas');
     GameBoard.ctx = GameBoard.canvas.getContext('2d');
-
+    
     // Create grid
     for (let i = 0; i < GameBoard.difficuly; i++) {
       for (let j = 0; j < GameBoard.difficuly; j++) {
@@ -23,7 +25,7 @@ const GameBoard = {
         });
       }
     }
-
+   
     // Create pieces
     GameBoard.grid.forEach((grid, index) => {
       let piece = PieceManager.add(index, grid.x, grid.y);
@@ -46,11 +48,45 @@ const GameBoard = {
   },
 
   shuffleBoard: function() {
-    console.log('Shuffle');
- },
+     // Shuffle pieces
+     var tl = new TimelineMax();
+     for (var i = 0; i < 20; i++) {
+       tl.call(PieceManager.shuffle, [], this, "+= 0.05")
+     }
+     
+     // Activate interaction
+     tl.call(() => GameBoard.interactable = true);
+  },
+
+  validateBoard: function() {
+    // Validate the empty piece position
+    if (PieceManager.pieces[PieceManager.pieces.length - 1] !== PieceManager.empty) return;
+
+    // If empty piece is in the correct place, validate rest of board
+    let success = PieceManager.pieces.every((piece, index) => {
+      return piece.id === index;
+    });
+
+    if (success) GameBoard.onSuccess();
+  },
+
+  onSuccess: function() {
+    GameBoard.interactable = false;
+    GameBoard.shuffleBtn.style.display = 'none';
+    TweenMax.to(PieceManager.empty, 0.32, {opacity: 1, ease: Power2.easeInOut});
+  },
   
   onMouseClickHandler: function(e) {
-    console.log('Click');
+    if (!GameBoard.interactable) return;
+
+    // Find clicked piece
+    let piece = PieceManager.getPieceByClick();
+
+    // If clicked piece is a valid move
+    if (piece) {
+      GameBoard.interactable = false;
+      PieceManager.move(piece);
+    }
   },
   
   onMouseMoveHandler: function(e) {
